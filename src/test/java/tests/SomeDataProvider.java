@@ -16,7 +16,7 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 
 public class SomeDataProvider implements ArgumentsProvider, AfterEachCallback {
 
-    public static final ExtensionContext.Namespace NAMESPACE
+    private final ExtensionContext.Namespace NAMESPACE
             = ExtensionContext.Namespace.create(DataProviderContext.class);
 
     public String createRandomName() {
@@ -30,6 +30,25 @@ public class SomeDataProvider implements ArgumentsProvider, AfterEachCallback {
         // Queue<Integer> keysQueue = new ArrayDeque<>();
         AtomicReference<Integer> counter = new AtomicReference<>(1);
         List<Arguments> argumentsList = Arrays.asList(
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
+                of(createRandomName()),
                 of(createRandomName()),
                 of(createRandomName()),
                 of(createRandomName()),
