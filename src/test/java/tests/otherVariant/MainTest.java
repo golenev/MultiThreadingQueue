@@ -1,4 +1,4 @@
-package tests;
+package tests.otherVariant;
 
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;

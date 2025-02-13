@@ -1,23 +1,28 @@
-package tests;
+package tests.anotherVariant;
 
 import com.github.javafaker.Faker;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
-import static java.util.Objects.*;
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-public class SomeDataProvider implements ArgumentsProvider, AfterEachCallback {
+public class AnotherDataProvider implements ArgumentsProvider, AfterEachCallback {
 
-    private final ExtensionContext.Namespace NAMESPACE
-            = ExtensionContext.Namespace.create(DataProviderContext.class);
+    protected static Map<Integer, String> map = new HashMap<>();
+    private static AtomicReference<Integer> initialCounter = new AtomicReference<>(1);
+    private static AtomicReference<Integer> deletionCounter = new AtomicReference<>(1);
 
     public String createRandomName() {
         Faker faker = new Faker();
@@ -26,31 +31,7 @@ public class SomeDataProvider implements ArgumentsProvider, AfterEachCallback {
 
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) {
-        Queue<Integer> keysQueue = new ConcurrentLinkedQueue<>();
-        // Queue<Integer> keysQueue = new ArrayDeque<>();
-        AtomicReference<Integer> counter = new AtomicReference<>(1);
         List<Arguments> argumentsList = Arrays.asList(
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
-                of(createRandomName()),
                 of(createRandomName()),
                 of(createRandomName()),
                 of(createRandomName()),
@@ -127,23 +108,17 @@ public class SomeDataProvider implements ArgumentsProvider, AfterEachCallback {
         );
         argumentsList.forEach(arg -> {
             String randomName = (String) arg.get()[0];
-            Integer storeKey = counter.getAndSet(counter.get() + 1);
-            keysQueue.add(storeKey);
-            extensionContext.getStore(NAMESPACE).put(storeKey, randomName);
-            extensionContext.getStore(NAMESPACE).put("qeueu", keysQueue);
-            System.out.println("Положили в стору имя " + randomName + " по ключу " + storeKey);
+            Integer storeKey = initialCounter.getAndSet(initialCounter.get() + 1);
+            map.put(storeKey, randomName);
         });
+        System.out.println("печатаем мапу до тестов " + map);
         return argumentsList.stream();
     }
 
+
     @Override
-    public void afterEach(ExtensionContext extensionContext) {
-        Queue<Integer> keysQueue = extensionContext.getStore(NAMESPACE).get("qeueu", Queue.class);
-        synchronized (keysQueue) {
-            Integer storeKey = requireNonNull(keysQueue.poll(), "ключ  из очереди null ");
-            String puttedName = extensionContext.getStore(NAMESPACE).get(storeKey, String.class);
-            System.out.println("Достали из сторы положенное ранее имя = " + puttedName + " по ключу " + storeKey);
-        }
-        System.out.println(keysQueue + " печатает остатки очереди после каждого теста");
+    public void afterEach(ExtensionContext context) throws Exception {
+        var currentDeleteKey = deletionCounter.getAndUpdate(a -> a + 1);
+        requireNonNull(map.remove(currentDeleteKey), "значение мапы не должно быть null");
     }
 }
