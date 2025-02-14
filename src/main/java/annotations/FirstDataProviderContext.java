@@ -1,6 +1,7 @@
-package tests.anotherVariant;
+package annotations;
 
 
+import dataproviders.FirstDataProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -8,8 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(AfterAllStatementExtension.class)
-public @interface AfterAllPrintStatement {
+@ExtendWith(FirstDataProvider.class)
+public @interface FirstDataProviderContext {
+
 }
