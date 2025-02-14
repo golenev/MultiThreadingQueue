@@ -8,9 +8,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(AnotherDataProvider.class)
-public @interface AnotherDataProviderContext {
-
+@ExtendWith(AfterAllStatementExtension.class)
+public @interface AfterAllPrintStatement {
 }
