@@ -8,11 +8,9 @@ public class DbExample {
 
     @Test
     void test () {
-        var offices = new Queries().getListOffices();
-        System.out.println(offices);
-        new Queries().insertIntoOffices(new Offices(1010101010L, "Qwerty"));
-        var updOffices = new Queries().getListOffices();
-        System.out.println(updOffices);
+   var off = new Offices(1010101010L, "Qwerty");
+        new Queries().insertIntoOffices(off);
+       // new Queries().deleteOfficeById(off);
     }
 
 }

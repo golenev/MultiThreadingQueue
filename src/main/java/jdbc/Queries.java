@@ -2,22 +2,28 @@ package jdbc;
 
 import models.Offices;
 
+import java.security.PublicKey;
 import java.util.List;
 
 import static jdbc.DatabaseConfigurator.getJdbcTemplate;
 
 public class Queries {
 
-    public List<Offices> getListOffices () {
+    public List<Offices> getListOffices() {
         return getJdbcTemplate().query("select * from offices", new Offices());
     }
 
-    public void insertIntoOffices (Offices office) {
-         getJdbcTemplate()
-                 .update("""
-                         insert into offices (office_id, office_name)
-                         values (%d , '%s')
-                         """.formatted(office.getOfficeId(), office.getOfficeName()));
+    public void insertIntoOffices(Offices office) {
+        getJdbcTemplate()
+                .update("""
+                        insert into offices (office_id, office_name)
+                        values (? , ?)
+                        """, office.getOfficeId(), office.getOfficeName());
+    }
+
+    public void deleteOfficeById(Long officeId) {
+        getJdbcTemplate()
+                .update("delete from offices where office_id = %d".formatted(officeId));
     }
 
 }
