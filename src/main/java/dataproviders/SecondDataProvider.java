@@ -6,13 +6,15 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
+import static java.text.MessageFormat.*;
 import static java.util.Objects.requireNonNull;
-import static repository.ConcurrentStringSet.getStorage;
+import static repository.ConcurrentStringSet.getGlobalStorage;
 
 public class SecondDataProvider implements ArgumentsProvider, AfterEachCallback {
 
@@ -22,9 +24,7 @@ public class SecondDataProvider implements ArgumentsProvider, AfterEachCallback 
 
     public String createRandomName() {
         Faker faker = new Faker();
-        var createdName = faker.name().fullName();
-        getStorage().add(createdName);
-        return createdName;
+        return faker.name().fullName();
     }
 
     @Override
@@ -39,9 +39,12 @@ public class SecondDataProvider implements ArgumentsProvider, AfterEachCallback 
         argumentsList.forEach(arg -> {
             String randomName = (String) arg.get()[0];
             Integer storeKey = initialCounter.getAndSet(initialCounter.get() + 1);
+            System.out.println(format("second dataprovider: кладём значения по временную мапу secondMap {0} для теста {1}", randomName, extensionContext.getDisplayName()));
             secondMap.put(storeKey, randomName);
+            System.out.println(format("second dataprovider: кладём значение по мапу GlobalStorage {0} для теста {1}", randomName, extensionContext.getDisplayName()));
+            getGlobalStorage().add(randomName);
         });
-        System.out.printf("second dataprovider: печатаем мапу до теста %s %s%n", extensionContext.getDisplayName(), secondMap);
+        System.out.printf("second dataprovider: печатаем мапу для теста %s %s%n", extensionContext.getDisplayName(), secondMap);
         return argumentsList.stream();
     }
 
@@ -50,7 +53,7 @@ public class SecondDataProvider implements ArgumentsProvider, AfterEachCallback 
     public void afterEach(ExtensionContext context) {
         System.out.println("second dataprovider: Заходим в афтер ич");
         var currentDeleteKey = deletionCounter.getAndUpdate(a -> a + 1);
-        getStorage().remove(secondMap.get(currentDeleteKey));
+        getGlobalStorage().remove(secondMap.get(currentDeleteKey));
         requireNonNull(secondMap.remove(currentDeleteKey), "second dataprovider : значение мапы не должно быть null");
     }
 

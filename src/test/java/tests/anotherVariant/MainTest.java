@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import java.util.Random;
 
 @Execution(ExecutionMode.CONCURRENT)
+//@Execution(ExecutionMode.SAME_THREAD)
 @AfterAllPrintStatement
 public class MainTest {
 
@@ -20,7 +21,7 @@ public class MainTest {
     @ParameterizedTest
     @ArgumentsSource(FirstDataProvider.class)
     void test1() throws InterruptedException {
-        System.out.println("сам тест");
+        System.out.println("сам тест test1(). во временной мапе имеем - " + FirstDataProvider.firstMap);
         Thread.sleep(new Random().nextLong(4000, 7000));
     }
 
@@ -28,50 +29,51 @@ public class MainTest {
     @ParameterizedTest
     @ArgumentsSource(FirstDataProvider.class)
     void test2() throws InterruptedException {
+        System.out.println("сам тест test2(). во временной мапе имеем - " + FirstDataProvider.firstMap);
         Thread.sleep(new Random().nextLong(4000, 7000));
     }
 
-    @SecondDataProviderContext
-    @ParameterizedTest
-    @ArgumentsSource(SecondDataProvider.class)
-    void test3() throws InterruptedException {
-        Thread.sleep(new Random().nextLong(4000, 7000));
-    }
-
-    @SecondDataProviderContext
-    @ParameterizedTest
-    @ArgumentsSource(SecondDataProvider.class)
-    void test4() throws InterruptedException {
-        Thread.sleep(new Random().nextLong(4000, 7000));
-    }
-
-    @FirstDataProviderContext
-    @ParameterizedTest
-    @ArgumentsSource(FirstDataProvider.class)
-    void test5() throws InterruptedException {
-        System.out.println("сам тест");
-        Thread.sleep(new Random().nextLong(4000, 7000));
-    }
-
-    @FirstDataProviderContext
-    @ParameterizedTest
-    @ArgumentsSource(FirstDataProvider.class)
-    void test6() throws InterruptedException {
-        Thread.sleep(new Random().nextLong(4000, 7000));
-    }
-
-    @SecondDataProviderContext
-    @ParameterizedTest
-    @ArgumentsSource(SecondDataProvider.class)
-    void test7() throws InterruptedException {
-        Thread.sleep(new Random().nextLong(4000, 7000));
-    }
-
-    @SecondDataProviderContext
-    @ParameterizedTest
-    @ArgumentsSource(SecondDataProvider.class)
-    void test8() throws InterruptedException {
-        Thread.sleep(new Random().nextLong(4000, 7000));
-    }
+//    @SecondDataProviderContext
+//    @ParameterizedTest
+//    @ArgumentsSource(SecondDataProvider.class)
+//    void test3() throws InterruptedException {
+//        Thread.sleep(new Random().nextLong(4000, 7000));
+//    }
+//
+//    @SecondDataProviderContext
+//    @ParameterizedTest
+//    @ArgumentsSource(SecondDataProvider.class)
+//    void test4() throws InterruptedException {
+//        Thread.sleep(new Random().nextLong(4000, 7000));
+//    }
+//
+//    @FirstDataProviderContext
+//    @ParameterizedTest
+//    @ArgumentsSource(FirstDataProvider.class)
+//    void test5() throws InterruptedException {
+//        System.out.println("сам тест");
+//        Thread.sleep(new Random().nextLong(4000, 7000));
+//    }
+//
+//    @FirstDataProviderContext
+//    @ParameterizedTest
+//    @ArgumentsSource(FirstDataProvider.class)
+//    void test6() throws InterruptedException {
+//        Thread.sleep(new Random().nextLong(4000, 7000));
+//    }
+//
+//    @SecondDataProviderContext
+//    @ParameterizedTest
+//    @ArgumentsSource(SecondDataProvider.class)
+//    void test7() throws InterruptedException {
+//        Thread.sleep(new Random().nextLong(4000, 7000));
+//    }
+//
+//    @SecondDataProviderContext
+//    @ParameterizedTest
+//    @ArgumentsSource(SecondDataProvider.class)
+//    void test8() throws InterruptedException {
+//        Thread.sleep(new Random().nextLong(4000, 7000));
+//    }
 
 }

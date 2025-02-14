@@ -25,7 +25,7 @@ public class ConcurrentStringSet {
     /**
      * Возвращает единственный экземпляр хранилища.
      */
-    public static ConcurrentStringSet getStorage() {
+    public static ConcurrentStringSet getGlobalStorage() {
         return INSTANCE;
     }
 
@@ -85,7 +85,7 @@ public class ConcurrentStringSet {
 
     public static void main(String[] args) {
 
-        ConcurrentStringSet set = ConcurrentStringSet.getStorage();
+        ConcurrentStringSet set = ConcurrentStringSet.getGlobalStorage();
 
         set.add("Qwerty");
         set.add("Qwerty");
