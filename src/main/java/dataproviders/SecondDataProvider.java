@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 
 import static java.text.MessageFormat.format;
 import static java.util.Objects.requireNonNull;
-import static repository.ConcurrentStringSet.getGlobalStorage;
 
 public class SecondDataProvider implements ArgumentsProvider, AfterEachCallback {
 
