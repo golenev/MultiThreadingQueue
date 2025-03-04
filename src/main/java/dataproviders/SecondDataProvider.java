@@ -28,7 +28,6 @@ public class SecondDataProvider implements ArgumentsProvider, AfterEachCallback 
         var id = faker.number().numberBetween(40000000L, 900000000L);
         var newOffice = new Offices(id, officeName);
         new Queries().insertIntoOffices(newOffice);
-        System.out.println(format("SECOND dataprovider: кладём офис id {0} в базу", newOffice.getOfficeId().toString()));
         return newOffice.getOfficeId();
     }
 
@@ -62,7 +61,6 @@ public class SecondDataProvider implements ArgumentsProvider, AfterEachCallback 
 
     @Override
     public void afterEach(ExtensionContext context) {
-        System.out.println("SECOND dataprovider: Заходим в афтер ич");
         var currentDeleteKey = deletionCounter.getAndUpdate(a -> a + 1);
         Long officeIdValue = requireNonNull(secondMap.remove(currentDeleteKey), "SECOND dataprovider : значение мапы не должно быть null в тесте " + context.getDisplayName());
         new Queries().deleteOfficeById(officeIdValue);

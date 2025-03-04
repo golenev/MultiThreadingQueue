@@ -62,7 +62,6 @@ public class ThirdDataProvider implements ArgumentsProvider, AfterEachCallback {
 
     @Override
     public void afterEach(ExtensionContext context) {
-        System.out.println("THIRD dataprovider: Заходим в афтер ич");
         var currentDeleteKey = deletionCounter.getAndUpdate(a -> a + 1);
         Long officeIdValue = requireNonNull(thirdMap.remove(currentDeleteKey), "THIRD dataprovider : значение мапы не должно быть null в тесте " + context.getDisplayName());
         new Queries().deleteOfficeById(officeIdValue);
