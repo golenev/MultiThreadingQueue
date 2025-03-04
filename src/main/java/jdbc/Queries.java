@@ -3,9 +3,7 @@ package jdbc;
 import io.qameta.allure.Step;
 import models.Offices;
 
-import java.security.PublicKey;
 import java.util.List;
-import java.util.Random;
 
 import static jdbc.DatabaseConfigurator.getJdbcTemplate;
 import static util.SleepUtil.sleepRandomTime;
