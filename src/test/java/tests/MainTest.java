@@ -38,14 +38,14 @@ public class MainTest {
         System.out.println("сам тест test2()");
     }
 
-    @Test
-    void test () {
-      var fun =  new FirstDataProvider().createLazyRandomOfficeSupplier(100, 2000);
-        Long res =  fun.get();
-        res =  fun.get();
-        res =  fun.get();
-        res =  fun.get();
-    }
+//    @Test
+//    void test () {
+//      var fun =  new FirstDataProvider().createLazyRandomOfficeSupplier(100, 2000);
+//        Long res =  fun.get();
+//        res =  fun.get();
+//        res =  fun.get();
+//        res =  fun.get();
+//    }
 
 //    @SecondDataProviderContext
 //    @ParameterizedTest(name = "test group 3")

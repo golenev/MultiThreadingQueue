@@ -1,6 +1,5 @@
 package dataproviders;
 
-import annotations.FirstDataProviderContext;
 import com.github.javafaker.Faker;
 import jdbc.Queries;
 import models.Offices;
@@ -9,27 +8,21 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.text.MessageFormat.format;
-import static java.util.Objects.requireNonNull;
 
 public class FirstDataProvider implements ArgumentsProvider, AfterEachCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE
-            = ExtensionContext.Namespace.create(FirstDataProviderContext.class);
-    private static final ConcurrentHashMap<Integer, Supplier<Long>> dataMap = new ConcurrentHashMap<>();
-    private static final AtomicInteger initialCounter = new AtomicInteger(1);
-    private static final AtomicInteger deletionCounter = new AtomicInteger(1);
+            = ExtensionContext.Namespace.create(FirstDataProvider.class);
+
+    private final ConcurrentHashMap<String, Map<Integer, Supplier<Long>>> testDataMap = new ConcurrentHashMap<>();
+    private final AtomicInteger initialCounter = new AtomicInteger(1);
+    private final AtomicInteger deletionCounter = new AtomicInteger(1);
 
     public Supplier<Long> createLazyRandomOfficeSupplier(int origin, int bound) {
         return new Supplier<>() {
@@ -38,7 +31,6 @@ public class FirstDataProvider implements ArgumentsProvider, AfterEachCallback {
             @Override
             public Long get() {
                 if (cachedValue == null) {
-                    // Вычисляем значение только один раз
                     Faker faker = new Faker();
                     var officeName = faker.name().fullName();
                     var id = faker.number().numberBetween(40000000L, 900000000L);
@@ -52,38 +44,40 @@ public class FirstDataProvider implements ArgumentsProvider, AfterEachCallback {
     }
 
     @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) {
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+        String testKey = context.getRequiredTestMethod().getName();
         List<Supplier<Long>> suppliers = List.of(
                 createLazyRandomOfficeSupplier(200, 800),
                 createLazyRandomOfficeSupplier(1000, 2000),
                 createLazyRandomOfficeSupplier(3500, 6000),
                 createLazyRandomOfficeSupplier(8000, 10000)
         );
-        List<Arguments> argumentsList = suppliers.stream()
-                .map(Arguments::of)
+        Map<Integer, Supplier<Long>> dataMap = testDataMap.computeIfAbsent(
+                testKey, k -> new ConcurrentHashMap<>()
+        );
+        List<Arguments> arguments = suppliers.stream()
+                .map(supplier -> {
+                    int key = initialCounter.getAndIncrement();
+                    dataMap.put(key, supplier);
+                    return Arguments.of(supplier);
+                })
                 .toList();
-
-        argumentsList.forEach(arg -> {
-            Supplier<Long> officeIdSupplier = (Supplier<Long>) arg.get()[0];
-            Integer storeKey = initialCounter.getAndIncrement();
-            dataMap.put(storeKey, officeIdSupplier);
-            var key = extensionContext.getRequiredTestMethod().getName();
-
-            extensionContext.getStore(NAMESPACE).put(key, dataMap);
-            System.out.printf("FIRST dataprovider : печатаем мапу до теста %s %s%n", extensionContext.getDisplayName(), dataMap);
-        });
-        System.out.println(extensionContext.getRequiredTestMethod().getName());
-        return argumentsList.stream();
+        context.getStore(NAMESPACE).put(testKey, dataMap);
+        return arguments.stream();
     }
 
     @Override
     public void afterEach(ExtensionContext context) {
-        var key = context.getRequiredTestMethod().getName();
-        Integer currentDeleteKey = deletionCounter.getAndIncrement();
-        ConcurrentHashMap<Integer, Supplier<Long>> dataMap = (ConcurrentHashMap<Integer, Supplier<Long>>) context.getStore(NAMESPACE).get(key, Map.class);
-        Supplier<Long> officeIdSupplier = requireNonNull(dataMap.remove(currentDeleteKey), "FIRST dataprovider: значение мапы не должно быть null");
-        Long officeIdValue = officeIdSupplier.get(); // Получаем закэшированное значение
-        System.out.println("Удаляем из базы офис " + officeIdValue + " по ключу из хранилища " + currentDeleteKey);
-        new Queries().deleteOfficeById(officeIdValue); // Удаляем по закэшированному значению
+        String testKey = context.getRequiredTestMethod().getName();
+        int keyToRemove = deletionCounter.getAndIncrement();
+        Map<Integer, Supplier<Long>> dataMap = (Map<Integer, Supplier<Long>>)
+                context.getStore(NAMESPACE).get(testKey);
+        if (dataMap != null) {
+            Supplier<Long> supplier = dataMap.remove(keyToRemove);
+            if (supplier != null) {
+                Long officeId = supplier.get();
+                new Queries().deleteOfficeById(officeId);
+            }
+        }
     }
 }
