@@ -11,7 +11,7 @@ import java.util.function.Supplier
 class MainTestKotlin {
 
     @FirstDataProviderContextKotlin
-    @ParameterizedTest(name = "test group 1")
+    @ParameterizedTest(name = "test group 1 invoke{0}")
     @ArgumentsSource(FirstDataProviderKotlin::class)
     fun test1(officeIdSupplier: Supplier<Long>) {
         Allure.step("Создаём в базе офис ${officeIdSupplier.get()}")
@@ -19,7 +19,7 @@ class MainTestKotlin {
     }
 
     @FirstDataProviderContextKotlin
-    @ParameterizedTest(name = "test group 2")
+    @ParameterizedTest(name = "test group 2 invoke{0}")
     @ArgumentsSource(FirstDataProviderKotlin::class)
     fun test2(officeIdSupplier: Supplier<Long>) {
         Allure.step("Создаём в базе офис ${officeIdSupplier.get()}")
