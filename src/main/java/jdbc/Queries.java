@@ -1,7 +1,7 @@
 package jdbc;
 
 import io.qameta.allure.Step;
-import models.Offices;
+import models.Office;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ import static util.SleepUtil.sleepRandomTime;
 
 public class Queries {
 
-    public List<Offices> getListOffices() {
-        return getJdbcTemplate().query("select * from offices", new Offices());
+    public List<Office> getListOffices() {
+        return getJdbcTemplate().query("select * from offices", new Office());
     }
 
     @Step("Добавляем в базу офис {office}")
-    public void insertIntoOffices(Offices office) {
+    public void insertIntoOffices(Office office) {
         sleepRandomTime();
         getJdbcTemplate()
                 .update("""
@@ -25,7 +25,7 @@ public class Queries {
     }
 
     @Step("Добавляем в базу офис c имитацией задержки {office}")
-    public void insertIntoOfficesWithDelay(Offices office, int origin, int bound) {
+    public void insertIntoOfficesWithDelay(Office office, int origin, int bound) {
         sleepRandomTime(origin, bound);
         getJdbcTemplate()
                 .update("""

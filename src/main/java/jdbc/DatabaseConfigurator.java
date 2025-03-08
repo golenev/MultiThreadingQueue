@@ -7,15 +7,11 @@ import javax.sql.DataSource;
 
 
 public class DatabaseConfigurator {
-    // Синглтон для DataSource
     private static DataSource dataSource;
-    // Синглтон для JdbcTemplate
     private static JdbcTemplate jdbcTemplate;
 
-    // Приватный конструктор, чтобы запретить создание экземпляров класса
     private DatabaseConfigurator() {}
 
-    // Метод для получения JdbcTemplate
     public static synchronized JdbcTemplate getJdbcTemplate() {
         if (jdbcTemplate == null) {
             jdbcTemplate = new JdbcTemplate(getDataSource());
@@ -23,7 +19,6 @@ public class DatabaseConfigurator {
         return jdbcTemplate;
     }
 
-    // Метод для получения DataSource (синглтон)
     private static synchronized DataSource getDataSource() {
         if (dataSource == null) {
             String url = "jdbc:postgresql://localhost:34567/mydatabase";
@@ -34,7 +29,6 @@ public class DatabaseConfigurator {
         return dataSource;
     }
 
-    // Создание DataSource
     private static DataSource createDataSource(String url, String username, String password) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");

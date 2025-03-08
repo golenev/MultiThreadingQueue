@@ -12,15 +12,14 @@ import java.sql.SQLException;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Offices implements RowMapper<Offices> {
+public class Office implements RowMapper<Office> {
 
     private Long officeId;
     private String officeName;
 
     @Override
-    public Offices mapRow(ResultSet rs, int rowNum) throws SQLException {
-        BeanPropertyRowMapper<Offices> rowMapper = new BeanPropertyRowMapper<>(Offices.class);
+    public Office mapRow(ResultSet rs, int rowNum) throws SQLException {
+        BeanPropertyRowMapper<Office> rowMapper = new BeanPropertyRowMapper<>(Office.class);
         return rowMapper.mapRow(rs, rowNum);
-
     }
 }
