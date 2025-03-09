@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(FirstDataProvider.class)
+//@ExtendWith(FirstDataProvider.class)
 public @interface FirstDataProviderContext {
 
 }

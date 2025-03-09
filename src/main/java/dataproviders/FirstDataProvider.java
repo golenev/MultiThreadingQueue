@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
 
-public class FirstDataProvider implements ArgumentsProvider, AfterEachCallback {
+public class FirstDataProvider implements ArgumentsProvider {
 
     public static final ExtensionContext.Namespace NAMESPACE
             = ExtensionContext.Namespace.create(FirstDataProvider.class);
@@ -51,15 +51,18 @@ public class FirstDataProvider implements ArgumentsProvider, AfterEachCallback {
         return arguments.stream();
     }
 
-    @Override
-    public void afterEach(ExtensionContext context) {
-        String testKey = context.getRequiredTestMethod().getName();
-        ConcurrentLinkedQueue<Office> officeQueue =
-                context.getStore(NAMESPACE).get(testKey, ConcurrentLinkedQueue.class);
-
-        if (officeQueue != null && !officeQueue.isEmpty()) {
-            Office office = officeQueue.remove();
-            new Queries().deleteOfficeById(office.getOfficeId());
-        } else throw new IllegalStateException("officesQueue is null or empty");
-    }
+    /**
+     * тут был afterEach который нарушал порядок
+     */
+//    @Override
+//    public void afterEach(ExtensionContext context) {
+//        String testKey = context.getRequiredTestMethod().getName();
+//        ConcurrentLinkedQueue<Office> officeQueue =
+//                context.getStore(NAMESPACE).get(testKey, ConcurrentLinkedQueue.class);
+//
+//        if (officeQueue != null && !officeQueue.isEmpty()) {
+//            Office office = officeQueue.remove();
+//            new Queries().deleteOfficeById(office.getOfficeId());
+//        } else throw new IllegalStateException("officesQueue is null or empty");
+//    }
 }
