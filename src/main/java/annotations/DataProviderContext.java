@@ -1,7 +1,7 @@
 package annotations;
 
 
-import dataproviders.FirstDataProvider;
+import dataproviders.JavaDataProviderWithAfterEachExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-//@ExtendWith(FirstDataProvider.class)
-public @interface FirstDataProviderContext {
+@ExtendWith(JavaDataProviderWithAfterEachExtension.class)
+public @interface DataProviderContext {
 
 }

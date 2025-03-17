@@ -10,12 +10,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Office implements RowMapper<Office> {
 
     private Long officeId;
     private String officeName;
+
+    public Office() {
+    }
+
+    public Office(Long officeId, String officeName) {
+        this.officeId = officeId;
+        this.officeName = officeName;
+    }
 
     @Override
     public Office mapRow(ResultSet rs, int rowNum) throws SQLException {

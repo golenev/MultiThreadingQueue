@@ -3,7 +3,6 @@ package dataproviders;
 import com.github.javafaker.Faker;
 import jdbc.Queries;
 import models.Office;
-import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
@@ -12,10 +11,10 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
 
-public class FirstDataProvider implements ArgumentsProvider {
+public class JavaDataProvider implements ArgumentsProvider {
 
     public static final ExtensionContext.Namespace NAMESPACE
-            = ExtensionContext.Namespace.create(FirstDataProvider.class);
+            = ExtensionContext.Namespace.create(JavaDataProvider.class);
 
     public Office createOffice(int origin, int bound) {
         Faker faker = new Faker();
